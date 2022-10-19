@@ -11,7 +11,7 @@ class PublikasiController extends Controller
 {
     public function index()
     {
-        $data = Publikasi::all();
+        $data = Publikasi::where('user_id', auth()->user()->id)->get();
         $result = PublikasiResource::collection($data);
         return $this->sendResponse($result, 'Successfull get data');
     }

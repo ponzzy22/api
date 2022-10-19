@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TokenController;
 use App\Http\Controllers\API\media\DokumenController;
 use App\Http\Controllers\API\Media\GambarController;
 use App\Http\Controllers\API\media\VideoController;
@@ -24,22 +25,31 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+//GENERATE TOKEN
+Route::post('token/generate', [TokenController::class, 'generate']);
+Route::post('token/testing', [TokenController::class, 'testing']);
 
-//POST
-Route::apiResource('artikel', ArtikelController::class);
-Route::apiResource('berita', BeritaController::class);
-Route::apiResource('informasi', InformasiController::class);
-Route::apiResource('publikasi', PublikasiController::class);
+//MIDDLEWARE
+Route::middleware('auth:sanctum')->group(function () {
+	//TOKEN
+	Route::get('token/detail', [TokenController::class, 'detail']);
+	Route::post('token/delete', [TokenController::class, 'delete']);
 
-//MEDIA
-Route::apiResource('gambar', GambarController::class);
-Route::apiResource('dokumen', DokumenController::class);
-Route::apiResource('video', VideoController::class);
+    //POST
+	Route::apiResource('artikel', ArtikelController::class);
+	Route::apiResource('berita', BeritaController::class);
+	Route::apiResource('informasi', InformasiController::class);
+	Route::apiResource('publikasi', PublikasiController::class);
 
-//THEME
-Route::apiResource('header', HeaderController::class);
-Route::apiResource('content', ContentController::class);
-Route::apiResource('footer', FooterController::class);
+	//MEDIA
+	Route::apiResource('gambar', GambarController::class);
+	Route::apiResource('dokumen', DokumenController::class);
+	Route::apiResource('video', VideoController::class);
+
+	//THEME
+	Route::apiResource('header', HeaderController::class);
+	Route::apiResource('content', ContentController::class);
+	Route::apiResource('footer', FooterController::class);
+});
+
+

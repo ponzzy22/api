@@ -11,7 +11,7 @@ class VideoController extends Controller
 {
     public function index()
     {
-        $data = Video::all();
+        $data = Video::where('user_id', auth()->user()->id)->get();
         $result = VideoResource::collection($data);
         return $this->sendResponse($result, 'Successfull get data');
     }

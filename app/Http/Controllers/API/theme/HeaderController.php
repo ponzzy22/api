@@ -11,7 +11,7 @@ class HeaderController extends Controller
 {
     public function index()
     {
-        $data = Header::all();
+        $data = Header::where('user_id', auth()->user()->id)->get();
         $result = HeaderResource::collection($data);
         return $this->sendResponse($result, 'Successfull get data');
     }

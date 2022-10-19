@@ -11,7 +11,7 @@ class InformasiController extends Controller
 {
     public function index()
     {
-        $data = Informasi::all();
+        $data = Informasi::where('user_id', auth()->user()->id)->get();
         $result = InformasiResource::collection($data);
         return $this->sendResponse($result, 'Successfull get data');
     }

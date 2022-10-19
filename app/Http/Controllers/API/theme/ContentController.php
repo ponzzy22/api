@@ -11,7 +11,7 @@ class ContentController extends Controller
 {
     public function index()
     {
-        $data = Content::all();
+        $data = Content::where('user_id', auth()->user()->id)->get();
         $result = ContentResource::collection($data);
         return $this->sendResponse($result, 'Successfull get data');
     }

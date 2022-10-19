@@ -11,7 +11,7 @@ class FooterController extends Controller
 {
     public function index()
     {
-        $data = footer::all();
+        $data = footer::where('user_id', auth()->user()->id)->get();
         $result = FooterResource::collection($data);
         return $this->sendResponse($result, 'Successfull get data');
     }

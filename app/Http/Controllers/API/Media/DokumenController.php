@@ -11,7 +11,7 @@ class DokumenController extends Controller
 {
     public function index()
     {
-        $data = Dokumen::all();
+        $data = Dokumen::where('user_id', auth()->user()->id)->get();
         $result = DokumenResource::collection($data);
         return $this->sendResponse($result, 'Successfull get data');
     }

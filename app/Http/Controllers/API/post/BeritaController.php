@@ -11,7 +11,7 @@ class BeritaController extends Controller
 {
     public function index()
     {
-        $data = Berita::all();
+        $data = Berita::where('user_id', auth()->user()->id)->get();
         $result = BeritaResource::collection($data);
         return $this->sendResponse($result, 'Successfull get data');
     }

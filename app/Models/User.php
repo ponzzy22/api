@@ -21,8 +21,7 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $table = 'sintari_user';
-
-
+    protected $guarded = ['id'];
 
     // Post
     public function artikel()

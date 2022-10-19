@@ -11,7 +11,7 @@ class GambarController extends Controller
 {
     public function index()
     {
-        $data = Gambar::all();
+        $data = Gambar::where('user_id', auth()->user()->id)->get();
         $result = GambarResource::collection($data);
         return $this->sendResponse($result, 'Successfull get data');
     }

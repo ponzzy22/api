@@ -17,7 +17,7 @@ class AuthKey
     public function handle(Request $request, Closure $next)
     {
         $token = $request->header('API-KEY');
-        if($token != 'NGETEHASU'){
+        if($token != 'DISKOMINFO'){
             return response()->json(['message' => 'Akses Data Ditolak'], 401);
         }
         return $next($request);

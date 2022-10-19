@@ -11,7 +11,7 @@ class ArtikelController extends Controller
 {
     public function index()
     {
-        $data = Artikel::all();
+        $data = Artikel::where('user_id', auth()->user()->id)->get();
         $result = ArtikelResource::collection($data);
         return $this->sendResponse($result, 'Successfull get data');
     }

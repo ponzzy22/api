@@ -39,3 +39,4 @@ Route::middleware('auth')->group(function(){
     include "_/Theme/content.php";
     include "_/Theme/footer.php";
 });
+
