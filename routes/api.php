@@ -11,6 +11,7 @@ use App\Http\Controllers\API\post\PublikasiController;
 use App\Http\Controllers\API\theme\ContentController;
 use App\Http\Controllers\API\theme\FooterController;
 use App\Http\Controllers\API\theme\HeaderController;
+use App\Http\Controllers\API\AllController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -36,20 +37,22 @@ Route::middleware('auth:sanctum')->group(function () {
 	Route::post('token/delete', [TokenController::class, 'delete']);
 
     //POST
-	Route::apiResource('artikel', ArtikelController::class);
-	Route::apiResource('berita', BeritaController::class);
-	Route::apiResource('informasi', InformasiController::class);
-	Route::apiResource('publikasi', PublikasiController::class);
+	Route::apiResource('post/artikel', ArtikelController::class);
+	Route::apiResource('post/berita', BeritaController::class);
+	Route::apiResource('post/informasi', InformasiController::class);
+	Route::apiResource('post/publikasi', PublikasiController::class);
 
 	//MEDIA
-	Route::apiResource('gambar', GambarController::class);
-	Route::apiResource('dokumen', DokumenController::class);
-	Route::apiResource('video', VideoController::class);
+	Route::apiResource('media/gambar', GambarController::class);
+	Route::apiResource('media/dokumen', DokumenController::class);
+	Route::apiResource('media/video', VideoController::class);
 
 	//THEME
-	Route::apiResource('header', HeaderController::class);
-	Route::apiResource('content', ContentController::class);
-	Route::apiResource('footer', FooterController::class);
+	Route::apiResource('theme/header', HeaderController::class);
+	Route::apiResource('theme/content', ContentController::class);
+	Route::apiResource('theme/footer', FooterController::class);
+
+	Route::get('alldata', [AllController::class, 'alldata']);
 });
 
 
