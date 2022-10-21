@@ -45,7 +45,7 @@ class TokenController extends Controller
             );
         }
     }
-    
+
 
     public function generate(Request $request)
     {
