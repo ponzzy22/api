@@ -30,6 +30,13 @@ class UserMasterController extends Controller
 
     public function user_store(Request $request)
     {
+        $request->validate([
+            'username' => 'required',
+            'email' => 'required',
+            'nip' => 'required',
+            'password' => 'required',
+            'token' => 'required',
+        ]);
         $user = Token::create([
             'username' => $request->username,
             'email' => $request->email,
@@ -43,6 +50,13 @@ class UserMasterController extends Controller
 
     public function user_update(Request $request, $id)
     {
+        $request->validate([
+            'username' => 'required',
+            'email' => 'required',
+            'nip' => 'required',
+            'password' => 'required',
+            'token' => 'required',
+        ]);
         $user = [
             'username' => $request->username,
             'email' => $request->email,
@@ -73,6 +87,12 @@ class UserMasterController extends Controller
 
     public function web_store(Request $request)
     {
+        $request->validate([
+            'nama_web' => 'required',
+            'token_id' => 'required',
+            'link_web' => 'required',
+            'status_web' => 'required',
+        ]);
         $web = Website::create([
             'nama_web' => $request->nama_web,
             'token_id' => $request->token_id,
@@ -85,6 +105,12 @@ class UserMasterController extends Controller
 
     public function web_update(Request $request, $id)
     {
+        $request->validate([
+            'nama_web' => 'required',
+            'token_id' => 'required',
+            'link_web' => 'required',
+            'status_web' => 'required',
+        ]);
         $web = [
             'nama_web' => $request->nama_web,
             'token_id' => $request->token_id,

@@ -31,7 +31,7 @@
                         </div>
 
                         <div class="row mt-4">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <label for="" class="control-label">NIP</label>
                                 <input type="text"
                                     class="form-control @error('nip')
@@ -39,7 +39,7 @@
                             @enderror"
                                     name="nip">
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <label for="" class="control-label">Password</label>
                                 <input type="password"
                                     class="form-control @error('password')
@@ -47,14 +47,14 @@
                             @enderror"
                                     name="password">
                             </div>
-                            <div class="col-md-4">
+                            {{-- <div class="col-md-4">
                                 <label for="" class="control-label">Confirm Password</label>
                                 <input type="password"
                                     class="form-control @error('c_password')
                             is-invalid
                             @enderror"
                                     name="c_password">
-                            </div>
+                            </div> --}}
                         </div>
                         <hr>
                         <button type="submit" class="btn btn-dark float-right"><i class="fa fa-save"></i> Generate</button>

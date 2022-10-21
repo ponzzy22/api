@@ -75,7 +75,7 @@
                         <div class="row mt-4">
                             <div class="col-md-12">
                                 <label for="" class="control-label">Token</label>
-                                <input type="text"
+                                <input type="text" placeholder="Bearer "
                                     class="form-control @error('token')
                             is-invalid
                             @enderror"

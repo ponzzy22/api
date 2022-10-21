@@ -81,11 +81,13 @@
                         <li class="iq-menu-title"><i class="ri-subtract-line"></i><span>Dashboard</span></li>
 
                         <li class="">
-                            <a href="{{ url('dashboard') }}" class="iq-waves-effect"><i class="ri-home-8-fill"></i><span>
+                            <a href="{{ url('dashboard') }}" class="iq-waves-effect"><i
+                                    class="ri-home-8-fill"></i><span>
                                     Dashboard</span></a>
                         </li>
                         <li class="">
-                            <a href="{{ route('master.index') }}" class="iq-waves-effect"><i class="ri-home-8-fill"></i><span>
+                            <a href="{{ route('master.index') }}" class="iq-waves-effect"><i
+                                    class="ri-home-8-fill"></i><span>
                                     Master</span></a>
                         </li>
 
@@ -93,13 +95,16 @@
 
                         <li class="iq-menu-title"><i class="ri-subtract-line"></i><span>Menu </span></li>
                         <li>
-                            <a href="#mailbox" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i
-                                    class="ri-mail-open-fill"></i><span>Master</span><i
+                            <a href="#mailbox" class="iq-waves-effect collapsed" data-toggle="collapse"
+                                aria-expanded="false"><i class="ri-mail-open-fill"></i><span>Master</span><i
                                     class="ri-arrow-right-s-line iq-arrow-right"></i></a>
                             <ul id="mailbox" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
-                                <li><a href="{{ route('generate.index') }}"><i class="ri-inbox-fill"></i>Generate Token</a></li>
-                                <li><a href="{{ route('user.index') }}"><i class="ri-edit-2-fill"></i>Daftar Pengguna</a></li>
-                                <li><a href="{{ route('web.index') }}"><i class="ri-edit-2-fill"></i>Daftar Website</a></li>
+                                <li><a href="{{ route('generate.index') }}"><i class="ri-inbox-fill"></i>Generate
+                                        Token</a></li>
+                                <li><a href="{{ route('user.index') }}"><i class="ri-edit-2-fill"></i>Daftar
+                                        Pengguna</a></li>
+                                <li><a href="{{ route('web.index') }}"><i class="ri-edit-2-fill"></i>Daftar Website</a>
+                                </li>
                             </ul>
                         </li>
 
@@ -116,7 +121,20 @@
             @include('template.section.header')
             <!-- TOP Nav Bar END -->
             <div class="container-fluid">
-                @include('template.utils.notif')
+                @if (count($errors) > 0)
+                    @foreach ($errors->all() as $error)
+                        <div class="alert alert-danger" role="alert">
+                            {{ $error }}
+                        </div>
+                    @endforeach
+                @endif
+
+                @if (Session::has('success'))
+                    <div class="alert alert-success" role="alert">
+                        {{ Session('success') }}
+                    </div>
+                @endif
+
                 @yield('content')
 
             </div>
