@@ -3,22 +3,30 @@
 namespace App\Http\Controllers\Master;
 
 use App\Http\Controllers\Controller;
-use App\Models\Token;
-use App\Models\Website;
+use App\Models\Master\Token;
+use App\Models\Master\Website;
 use Illuminate\Http\Request;
 
 class UserMasterController extends Controller
 {
+    public function master_index()
+    {
+        return view('master.welcome');
+    }
+
+
     public function generate_index()
     {
         return view('master/generate_index');
     }
+
 
     public function user_index()
     {
         $user = Token::all();
         return view('master/user_index', compact('user'));
     }
+
 
     public function user_store(Request $request)
     {
@@ -46,6 +54,7 @@ class UserMasterController extends Controller
         return back()->with('success', 'User berhasil di Ubah');
     }
 
+
     public function user_destroy($id)
     {
         $user = Token::findorfail($id);
@@ -53,12 +62,14 @@ class UserMasterController extends Controller
         return back()->with('success', 'User berhasil diHapus');
     }
 
+
     public function web_index()
     {
         $web = Website::all();
         $token = Token::all();
         return view('master/website_index', compact('web', 'token'));
     }
+
 
     public function web_store(Request $request)
     {
@@ -71,6 +82,7 @@ class UserMasterController extends Controller
         return back()->with('success', 'Website berhasil di Tambah');
     }
 
+
     public function web_update(Request $request, $id)
     {
         $web = [
@@ -82,6 +94,7 @@ class UserMasterController extends Controller
         Website::whereId($id)->update($web);
         return back()->with('success', 'Website berhasil di Ubah');
     }
+
 
     public function web_destroy($id)
     {

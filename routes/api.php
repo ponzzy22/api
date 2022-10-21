@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\TokenController;
 use App\Http\Controllers\API\media\DokumenController;
 use App\Http\Controllers\API\Media\GambarController;
 use App\Http\Controllers\API\media\VideoController;
@@ -12,6 +11,7 @@ use App\Http\Controllers\API\theme\ContentController;
 use App\Http\Controllers\API\theme\FooterController;
 use App\Http\Controllers\API\theme\HeaderController;
 use App\Http\Controllers\API\AllController;
+use App\Http\Controllers\Master\TokenController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -52,7 +52,6 @@ Route::middleware('auth:sanctum')->group(function () {
 	Route::apiResource('theme/content', ContentController::class);
 	Route::apiResource('theme/footer', FooterController::class);
 
-	Route::get('alldata', [AllController::class, 'alldata']);
 });
 
 

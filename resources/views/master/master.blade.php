@@ -60,7 +60,55 @@
     <!-- Wrapper Start -->
     <div class="wrapper">
         <!-- Sidebar  -->
-        @include('template.section.sidebar')
+        <div class="iq-sidebar">
+            <div class="iq-sidebar-logo d-flex justify-content-between">
+                <a href="index.html">
+                    <img src="images/logo.png" class="img-fluid" alt="">
+                    <span>Website</span>
+                </a>
+                <div class="iq-menu-bt-sidebar">
+                    <div class="iq-menu-bt align-self-center">
+                        <div class="wrapper-menu">
+                            <div class="main-circle"><i class="ri-more-fill"></i></div>
+                            <div class="hover-circle"><i class="ri-more-2-fill"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="sidebar-scrollbar">
+                <nav class="iq-sidebar-menu">
+                    <ul id="iq-sidebar-toggle" class="iq-menu">
+                        <li class="iq-menu-title"><i class="ri-subtract-line"></i><span>Dashboard</span></li>
+
+                        <li class="">
+                            <a href="{{ url('dashboard') }}" class="iq-waves-effect"><i class="ri-home-8-fill"></i><span>
+                                    Dashboard</span></a>
+                        </li>
+                        <li class="">
+                            <a href="{{ route('master.index') }}" class="iq-waves-effect"><i class="ri-home-8-fill"></i><span>
+                                    Master</span></a>
+                        </li>
+
+                        {{-- Master --}}
+
+                        <li class="iq-menu-title"><i class="ri-subtract-line"></i><span>Menu </span></li>
+                        <li>
+                            <a href="#mailbox" class="iq-waves-effect collapsed" data-toggle="collapse" aria-expanded="false"><i
+                                    class="ri-mail-open-fill"></i><span>Master</span><i
+                                    class="ri-arrow-right-s-line iq-arrow-right"></i></a>
+                            <ul id="mailbox" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
+                                <li><a href="{{ route('generate.index') }}"><i class="ri-inbox-fill"></i>Generate Token</a></li>
+                                <li><a href="{{ route('user.index') }}"><i class="ri-edit-2-fill"></i>Daftar Pengguna</a></li>
+                                <li><a href="{{ route('web.index') }}"><i class="ri-edit-2-fill"></i>Daftar Website</a></li>
+                            </ul>
+                        </li>
+
+                    </ul>
+                </nav>
+                <div class="p-3"></div>
+            </div>
+        </div>
+
 
         <!-- Page Content  -->
         <div id="content-page" class="content-page">
