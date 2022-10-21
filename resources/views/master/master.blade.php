@@ -99,7 +99,7 @@
                                 aria-expanded="false"><i class="ri-mail-open-fill"></i><span>Master</span><i
                                     class="ri-arrow-right-s-line iq-arrow-right"></i></a>
                             <ul id="mailbox" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
-                                <li><a href="{{ route('generate.index') }}"><i class="ri-inbox-fill"></i>Generate
+                                <li><a href="{{ route('generate.index') }}" target="__blank"><i class="ri-inbox-fill"></i>Generate
                                         Token</a></li>
                                 <li><a href="{{ route('user.index') }}"><i class="ri-edit-2-fill"></i>Daftar
                                         Pengguna</a></li>
