@@ -11,43 +11,7 @@ use Illuminate\Http\Request;
 
 class TokenController extends Controller
 {
-    public function testing(Request $request)
-    {
-        try {
-            $request->validate([
-                'email' => 'email|required',
-                'password' => 'required'
-            ]);
-
-            $credentials = request(['email', 'password']);
-            if (!Auth::attempt($credentials)) {
-                return $this->sendError('Tidak Terindentifikasi', 'Token tidak ditemukan', 500);
-            }
-
-            //Jika hash tidak sesuai
-            $user = User::where('email', $request->email)->first();
-            if (!Hash::check($request->password, $user->password, [])) {
-                throw new \Exception('Invalid Credentials');
-            }
-
-            //jika berhasil maka login
-            return $this->sendResponse([
-                'token_type' => 'Bearer',
-                'user' => $user
-            ], 'Testing Token Berhasil');
-        } catch (Exception $error) {
-            return $this->sendError(
-                [
-                    'message' => 'Ada yang salah',
-                    'error' => $error
-                ],
-                'Testing Token Gagal',
-            );
-        }
-    }
-
-
-    public function generate(Request $request)
+    public function generate_new(Request $request)
     {
         try {
             $request->validate([
@@ -85,7 +49,83 @@ class TokenController extends Controller
     }
 
 
-    public function detail(User $user)
+    public function generate_update(Request $request)
+    {
+        try {
+            $request->validate([
+                'email' => 'email|required',
+                'password' => 'required'
+            ]);
+
+            $credentials = request(['email', 'password']);
+            if (!Auth::attempt($credentials)) {
+                return $this->sendError('Data tidak ditemukan', 'Tidak teridentifikasi', 500);
+            }
+
+            //Jika hash tidak sesuai
+            $user = User::where('email', $request->email)->first();
+            if (!Hash::check($request->password, $user->password, [])) {
+                throw new \Exception('Invalid Credentials');
+            }
+
+            //hapus token
+            $user->tokens()->delete();
+            //buat token baru
+            $tokenResult = $user->createToken('DISKOMINFO')->plainTextToken;
+            return $this->sendResponse([
+                'access_token' => $tokenResult,
+                'token_type' => 'Bearer',
+                'user' => $user
+            ], 'Authenticated');
+        } catch (Exception $error) {
+            return $this->sendError(
+                [
+                    'message' => 'Ada Kesalahan',
+                    'error' => $error
+                ],
+                'Update token gagal',
+            );
+        }
+    }
+
+
+    public function cekuser(Request $request)
+    {
+        try {
+            $request->validate([
+                'email' => 'email|required',
+                'password' => 'required'
+            ]);
+
+            $credentials = request(['email', 'password']);
+            if (!Auth::attempt($credentials)) {
+                return $this->sendError('User tidak Ditemukan', 'Periksa kembali email & password', 500);
+            }
+
+            //Jika hash tidak sesuai
+            $user = User::where('email', $request->email)->first();
+            if (!Hash::check($request->password, $user->password, [])) {
+                throw new \Exception('Invalid Credentials');
+            }
+
+            //jika berhasil maka login
+            return $this->sendResponse([
+                'token_type' => 'Bearer',
+                'user' => $user
+            ], 'Testing User Berhasil');
+        } catch (Exception $error) {
+            return $this->sendError(
+                [
+                    'message' => 'Ada yang salah',
+                    'error' => $error
+                ],
+                'Testing User Gagal',
+            );
+        }
+    }
+
+
+    public function cektoken(User $user)
     {
         try {
 
@@ -102,12 +142,5 @@ class TokenController extends Controller
             );
         }
     }
-
-
-    public function delete(Request $request)
-    {
-        $user = User::find(Auth::user()->id);
-        $user->tokens()->delete();
-        return response()->noContent();
-    }
+    
 }

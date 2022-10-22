@@ -27,14 +27,14 @@ use Illuminate\Support\Facades\Route;
 */
 
 //GENERATE TOKEN
-Route::post('token/generate', [TokenController::class, 'generate']);
-Route::post('token/testing', [TokenController::class, 'testing']);
+Route::post('token/generate/new', [TokenController::class, 'generate_new']);
+Route::post('token/generate/update', [TokenController::class, 'generate_update']);
+Route::post('token/cekuser', [TokenController::class, 'cekuser']);
 
 //MIDDLEWARE
 Route::middleware('auth:sanctum')->group(function () {
 	//TOKEN
-	Route::get('token/detail', [TokenController::class, 'detail']);
-	Route::post('token/delete', [TokenController::class, 'delete']);
+	Route::get('token/cektoken', [TokenController::class, 'cektoken']);
 
     //POST
 	Route::apiResource('post/artikel', ArtikelController::class);

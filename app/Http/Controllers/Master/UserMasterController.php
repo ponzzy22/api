@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Master;
 
 use App\Http\Controllers\Controller;
 use App\Models\Master\Token;
+use App\Models\User;
 use App\Models\Master\Website;
 use Illuminate\Http\Request;
 
@@ -17,7 +18,21 @@ class UserMasterController extends Controller
 
     public function generate_index()
     {
-        return view('master/generate_index');
+        $user = Token::all();
+        return view('master/generate_index', compact('user'));
+    }
+
+
+    public function generate_new_index()
+    {
+        return view('master/generate_new');
+    }
+
+
+    public function generate_update_index()
+    {
+        $user = User::all();
+        return view('master/generate_update', compact('user'));
     }
 
 
