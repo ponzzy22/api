@@ -43,5 +43,6 @@ Route::middleware('auth')->group(function(){
     //master
     include "_/Master/website.php";
     include "_/Master/token.php";
+    include "_/Master2/master.php";
 });
 

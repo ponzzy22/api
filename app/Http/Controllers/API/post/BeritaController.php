@@ -27,4 +27,49 @@ class BeritaController extends Controller
 
         return $this->sendResponse($data, "Successfull get detail data");
     }
+
+
+    public function store(Request $request)
+    {
+        $berita = new Berita();
+        $berita->user_id = auth()->user()->id;
+        $berita->judul = request('judul');
+        $berita->isi = request('isi');
+        $req = "poto";
+        $namefolder = 'post/berita';
+        $url = uploadfile($req, $namefolder);
+        $berita->poto = $url;
+        $berita->save();
+
+        return $this->sendResponse($berita, "Successfull store");
+    }
+
+
+    public function update(Request $request, $id)
+    {
+        $berita = Berita::find($id);
+        $berita->judul = request('judul');
+        $berita->user_id = auth()->user()->id;
+        $berita->isi = request('isi');
+        $berita->save();
+        $req = "poto";
+        $namefolder = 'post/berita';
+        $data = $berita->poto;
+        $url = updateFile($req, $namefolder, $data);
+        if (request()->hasFile($req)) {
+            $berita->poto = $url;
+            $berita->save();
+        }
+
+        return $this->sendResponse($berita, "Successfull Update");
+    }
+
+    public function destroy($id)
+    {
+        $berita = Berita::findorfail($id);
+        $berita->delete();
+        $data = $berita->image;
+        deleteFIle($data);
+        return response()->noContent();
+    }
 }

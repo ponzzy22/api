@@ -82,6 +82,16 @@
                     </ul>
                 </li>
 
+                {{-- master --}}
+                <li class="iq-menu-title"><i class="ri-subtract-line"></i><span>Key Generate </span></li>
+                <li>
+                    <a href="#mailbox90" class="iq-waves-effect collapsed" data-toggle="collapse"
+                        aria-expanded="false"><i class="ri-mail-open-fill"></i><span>Generate</span><i
+                            class="ri-arrow-right-s-line iq-arrow-right"></i></a>
+                    <ul id="mailbox90" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
+                        <li><a href="{{ url('generate') }}"><i class="ri-inbox-fill"></i>Key</a></li>
+                    </ul>
+                </li>
 
             </ul>
         </nav>

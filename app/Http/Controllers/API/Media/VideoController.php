@@ -27,4 +27,43 @@ class VideoController extends Controller
 
         return $this->sendResponse($data, "Successfull get detail data");
     }
+
+    public function store(Request $request)
+    {
+        $data = new Video();
+        $data->judul = request('judul');
+        $data->image = uploadfile('image', 'media/video');
+        $data->user_id = auth()->user()->id;
+        $data->save();
+
+        return $this->sendResponse($data, "Successfull store");
+    }
+
+    public function update(Request $request, $id)
+    {
+        $video = Video::find($id);
+        $video->user_id = auth()->user()->id;
+        $video->judul = request('judul');
+        // $video->user = request('user');
+        $video->save();
+        $req = "image";
+        $namefolder = 'media/video';
+        $data = $video->image;
+        $url = updateFile($req, $namefolder, $data);
+        if (request()->hasFile($req)) {
+            $video->image = $url;
+            $video->save();
+        }
+
+        return $this->sendResponse($video, "Successfull Update");
+    }
+
+    public function destroy($id)
+    {
+        $video = Video::findorfail($id);
+        $video->delete();
+        $data = $video->image;
+        deleteFIle($data);
+        return response()->noContent();
+    }
 }

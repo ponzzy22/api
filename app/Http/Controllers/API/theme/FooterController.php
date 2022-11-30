@@ -27,4 +27,41 @@ class FooterController extends Controller
 
         return $this->sendResponse($data, "Successfull get detail data");
     }
+
+
+    public function store(Request $request)
+    {
+        $footer = new footer();
+        $footer->user_id = auth()->user()->id;
+        $footer->nama = Request('nama');
+        $footer->alamat = Request('alamat');
+        $footer->telepon = Request('telepon');
+        $footer->email = Request('email');
+        $footer->posisi = Request('posisi');
+        $footer->save();
+        return $this->sendResponse($footer, "Successfull store");
+    }
+
+    public function update(Request $request, $id)
+    {
+        $footer = footer::find($id);
+        $footer->user_id = auth()->user()->id;
+        $footer->nama = Request('nama');
+        $footer->alamat = Request('alamat');
+        $footer->telepon = Request('telepon');
+        $footer->email = Request('email');
+        $footer->posisi = Request('posisi');
+        $footer->save();
+
+        return $this->sendResponse($footer, "Successfull Update");
+    }
+
+    public function destroy($id)
+    {
+        $file = footer::findorfail($id);
+        $file->delete();
+        $data = $file->image;
+        deleteFIle($data);
+        return response()->noContent();
+    }
 }

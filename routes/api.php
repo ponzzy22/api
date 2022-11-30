@@ -11,6 +11,10 @@ use App\Http\Controllers\API\theme\ContentController;
 use App\Http\Controllers\API\theme\FooterController;
 use App\Http\Controllers\API\theme\HeaderController;
 use App\Http\Controllers\API\AllController;
+use App\Http\Controllers\API\Anggota\AsnController;
+use App\Http\Controllers\API\Anggota\HonorerController;
+use App\Http\Controllers\API\Anggota\PptkController;
+use App\Http\Controllers\API\Anggota\StrukturalController;
 use App\Http\Controllers\Master\TokenController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -51,6 +55,11 @@ Route::middleware('auth:sanctum')->group(function () {
 	Route::apiResource('theme/header', HeaderController::class);
 	Route::apiResource('theme/content', ContentController::class);
 	Route::apiResource('theme/footer', FooterController::class);
+
+	Route::apiResource('anggota/honorer', HonorerController::class);
+	Route::apiResource('anggota/struktural', StrukturalController::class);
+	Route::apiResource('anggota/pptk', PptkController::class);
+	Route::apiResource('anggota/asn', AsnController::class);
 
 });
 

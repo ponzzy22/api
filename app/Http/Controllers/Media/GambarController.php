@@ -39,33 +39,23 @@ class GambarController extends Controller
     }
 
 
-    public function update(Request $request, Gambar $gambar)
+    public function update(Request $request, Gambar $gambar, $id)
     {
-        // // dd($request->all());
-        // if ($request->has('image')) {
-        //     $image = $request->image;
-        //     $new_image = time() . $image->getClientOriginalName();
-        //     $image->move('media/gambar22/', $new_image);
-        //     $ganbar_data = [
-        //         'judul' => $request->judul,
-        //         'image' => 'media/gambar22/' . $new_image,
-        //     ];
-        // } else {
-        //     $ganbar_data = [
-        //         'judul' => $request->judul
-        //     ];
-        // }
-
-        // Gambar::whereId($id)->update($ganbar_data);
-
-        $gambar->judul = request('judul');
+        // dd($request->all());
+        $gambar = Gambar::find($id);
         $gambar->user_id = auth()->user()->id;
+        $gambar->judul = request('judul');
+        // $gambar->user = request('user');
         $gambar->save();
-        if (request()->hasFile('image')) {
-            $url = updateFile('image', 'media/gambar', $gambar->image);
+        $req = "image";
+        $namefolder = 'media/gambar';
+        $data = $gambar->image;
+        $url = updateFile($req, $namefolder, $data);
+        if (request()->hasFile($req)) {
             $gambar->image = $url;
             $gambar->save();
         }
+
         return back()->with('success', 'Gambar Anda berhasil diubah');
     }
 

@@ -27,4 +27,46 @@ class ContentController extends Controller
 
         return $this->sendResponse($data, "Successfull get detail data");
     }
+
+
+    public function store(Request $request)
+    {
+        $content = new Content();
+        $content->judul = Request('judul');
+        $content->tentang = Request('tentang');
+        $content->visi = Request('visi');
+        $content->misi = Request('misi');
+        $content->maklumat = Request('maklumat');
+        $content->selayang = uploadfile('selayang', 'theme/content');
+        $content->layanan = Request('layanan');
+        $content->user_id = auth()->user()->id;
+        $content->save();
+
+        return $this->sendResponse($content, "Successfull store");
+    }
+
+    public function update(Request $request, $id)
+    {
+        $content = Content::find($id);
+        $content->judul = Request('judul');
+        $content->tentang = Request('tentang');
+        $content->visi = Request('visi');
+        $content->misi = Request('misi');
+        $content->maklumat = Request('maklumat');
+        $content->selayang = uploadfile('selayang', 'theme/content');
+        $content->layanan = Request('layanan');
+        $content->user_id = auth()->user()->id;
+        $content->save();
+
+        return $this->sendResponse($content, "Successfull Update");
+    }
+
+    public function destroy($id)
+    {
+        $file = Content::findorfail($id);
+        $file->delete();
+        $data = $file->image;
+        deleteFIle($data);
+        return response()->noContent();
+    }
 }

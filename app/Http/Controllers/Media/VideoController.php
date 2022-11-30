@@ -17,15 +17,6 @@ class VideoController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
-        // $image = $request->image;
-        // $new_image = time().$image->getClientOriginalName();
-        // $video = Video::create([
-        //     'judul' =>$request->judul,
-        //     'user_id' =>$request->user_id,
-        //     'image' => 'media/video22/'.$new_image,
-        // ]);
-        // $image->move('media/video22/', $new_image);
         $request->validate([
             'judul' => ['required'],
             'image' => ['required', 'max:10000']
@@ -40,34 +31,24 @@ class VideoController extends Controller
     }
 
 
-    public function update(Request $request, Video $video)
+    public function update(Request $request, Video $video, $id)
     {
-        // // dd($request->all());
-        // if ($request->has('image')) {
-        //     $image = $request->image;
-        //     $new_image = time() . $image->getClientOriginalName();
-        //     $image->move('media/gambar22/', $new_image);
-        //     $ganbar_data = [
-        //         'judul' => $request->judul,
-        //         'image' => 'media/gambar22/' . $new_image,
-        //     ];
-        // } else {
-        //     $ganbar_data = [
-        //         'judul' => $request->judul
-        //     ];
-        // }
-
-        // Video::whereId($id)->update($ganbar_data);
-
-        $video->judul = request('judul');
+        // dd($request->all());
+        $video = Video::find($id);
         $video->user_id = auth()->user()->id;
+        $video->judul = request('judul');
+        // $video->user = request('user');
         $video->save();
-        if (request()->hasFile('image')) {
-            $url = updateFile('image', 'media/video', $video->image);
+        $req = "image";
+        $namefolder = 'media/video';
+        $data = $video->image;
+        $url = updateFile($req, $namefolder, $data);
+        if (request()->hasFile($req)) {
             $video->image = $url;
             $video->save();
         }
-        return back()->with('success', 'Gambar Anda berhasil diubah');
+
+        return back()->with('success', 'Video Anda berhasil diubah');
     }
 
 

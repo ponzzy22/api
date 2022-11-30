@@ -27,4 +27,43 @@ class GambarController extends Controller
 
         return $this->sendResponse($data, "Successfull get detail data");
     }
+
+    public function store(Request $request)
+    {
+        $data = new Gambar();
+        $data->user_id = auth()->user()->id;
+        $data->judul = request('judul');
+        $data->image = uploadfile('image', 'media/gambar');
+        $data->save();
+
+        return $this->sendResponse($data, "Successfull store");
+    }
+
+    public function update(Request $request, $id)
+    {
+        $gambar = Gambar::find($id);
+        $gambar->user_id = auth()->user()->id;
+        $gambar->judul = request('judul');
+        // $gambar->user = request('user');
+        $gambar->save();
+        $req = "image";
+        $namefolder = 'media/gambar';
+        $data = $gambar->image;
+        $url = updateFile($req, $namefolder, $data);
+        if (request()->hasFile($req)) {
+            $gambar->image = $url;
+            $gambar->save();
+        }
+
+        return $this->sendResponse($gambar, "Successfull Update");
+    }
+
+    public function destroy($id)
+    {
+        $gambar = Gambar::findorfail($id);
+        $gambar->delete();
+        $data = $gambar->image;
+        deleteFIle($data);
+        return response()->noContent();
+    }
 }

@@ -48,33 +48,19 @@ class DokumenController extends Controller
     }
 
 
-    public function update(Request $request, Dokumen $dokumen)
+    public function update(Request $request, Dokumen $dokumen, $id)
     {
         // dd($request->all());
-        // if ($request->has('image')) {
-        //     $image = $request->image;
-        //     $new_image = time() . $image->getClientOriginalName();
-        //     $image->move('media/dokumen22/', $new_image);
-        //     $ganbar_data = [
-        //         'judul' => $request->judul,
-        //         'user' => $request->user,
-        //         'image' => 'media/dokumen22/' . $new_image,
-        //     ];
-        // } else {
-        //     $ganbar_data = [
-        //         'judul' => $request->judul,
-        //         'user' => $request->user
-        //     ];
-        // }
-
-        // Dokumen::whereId($id)->update($ganbar_data);
-
+        $dokumen = Dokumen::find($id);
         $dokumen->user_id = auth()->user()->id;
         $dokumen->judul = request('judul');
         $dokumen->user = request('user');
         $dokumen->save();
-        if (request()->hasFile('image')) {
-            $url = updateFile('image', 'media/dokumen', $dokumen->image);
+        $req = "image";
+        $namefolder = 'media/dokumen';
+        $data = $dokumen->image;
+        $url = updateFile($req, $namefolder, $data);
+        if (request()->hasFile($req)) {
             $dokumen->image = $url;
             $dokumen->save();
         }
