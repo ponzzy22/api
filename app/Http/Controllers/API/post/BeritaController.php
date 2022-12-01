@@ -31,6 +31,12 @@ class BeritaController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'judul' => 'required',
+            'poto' => 'required|mimes:jpg,bmp,png|max:5024',
+            'isi' => 'required',
+        ]);
+
         $berita = new Berita();
         $berita->user_id = auth()->user()->id;
         $berita->judul = request('judul');
@@ -47,6 +53,12 @@ class BeritaController extends Controller
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'judul' => 'required',
+            'poto' => 'mimes:jpg,bmp,png',
+            'isi' => 'required',
+        ]);
+
         $berita = Berita::find($id);
         $berita->judul = request('judul');
         $berita->user_id = auth()->user()->id;

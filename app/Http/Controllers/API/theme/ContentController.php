@@ -31,6 +31,17 @@ class ContentController extends Controller
 
     public function store(Request $request)
     {
+
+        $request->validate([
+            'judul' => 'required',
+            'tentang' => 'required',
+            'visi' => 'required',
+            'misi' => 'required',
+            'maklumat' => 'required',
+            'selayang' => 'required|mimes:jpg,bmp,png|max:5024',
+            'layanan' => 'required',
+        ]);
+
         $content = new Content();
         $content->judul = Request('judul');
         $content->tentang = Request('tentang');
@@ -47,16 +58,30 @@ class ContentController extends Controller
 
     public function update(Request $request, $id)
     {
+
+        $request->validate([
+            'judul' => 'required',
+            'tentang' => 'required',
+            'visi' => 'required',
+            'misi' => 'required',
+            'maklumat' => 'required',
+            'selayang' => 'mimes:jpg,bmp,png|max:5024',
+            'layanan' => 'required',
+        ]);
+
         $content = Content::find($id);
         $content->judul = Request('judul');
         $content->tentang = Request('tentang');
         $content->visi = Request('visi');
         $content->misi = Request('misi');
         $content->maklumat = Request('maklumat');
-        $content->selayang = uploadfile('selayang', 'theme/content');
         $content->layanan = Request('layanan');
-        $content->user_id = auth()->user()->id;
         $content->save();
+        if (request()->hasFile('selayang')) {
+            $url = updateFile('selayang', 'theme/content', $content->selayang);
+            $content->selayang = $url;
+            $content->save();
+        }
 
         return $this->sendResponse($content, "Successfull Update");
     }

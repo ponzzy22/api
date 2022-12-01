@@ -31,6 +31,12 @@ class ArtikelController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'judul_artikel' => 'required',
+            'gambar_artikel' => 'required|mimes:jpg,bmp,png|max:5024',
+            'isi_artikel' => 'required',
+        ]);
+
         $data = new Artikel();
         $data->user_id = auth()->user()->id;
         $data->judul_artikel = request('judul_artikel');
@@ -47,6 +53,13 @@ class ArtikelController extends Controller
 
     public function update(Request $request, $id)
     {
+
+        $request->validate([
+            'judul_artikel' => 'required',
+            'gambar_artikel' => 'mimes:jpg,bmp,png',
+            'isi_artikel' => 'required',
+        ]);
+
         $artikel = Artikel::find($id);
         $artikel->user_id = auth()->user()->id;
         $artikel->judul_artikel = request('judul_artikel');

@@ -31,6 +31,14 @@ class FooterController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'nama' => 'required',
+            'alamat' => 'required',
+            'telepon' => 'required',
+            'email' => 'required',
+            'posisi' => 'required',
+        ]);
+
         $footer = new footer();
         $footer->user_id = auth()->user()->id;
         $footer->nama = Request('nama');
@@ -44,13 +52,20 @@ class FooterController extends Controller
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'nama' => 'required',
+            'alamat' => 'required',
+            'telepon' => 'required',
+            'email' => 'required',
+        ]);
+
         $footer = footer::find($id);
         $footer->user_id = auth()->user()->id;
         $footer->nama = Request('nama');
         $footer->alamat = Request('alamat');
         $footer->telepon = Request('telepon');
         $footer->email = Request('email');
-        $footer->posisi = Request('posisi');
+        if (request('posisi')) $footer->posisi = Request('posisi');
         $footer->save();
 
         return $this->sendResponse($footer, "Successfull Update");

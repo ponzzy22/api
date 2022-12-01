@@ -31,6 +31,13 @@ class PublikasiController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'judul_publikasi' => 'required',
+            'gambar_publikasi' => 'required|mimes:jpg,bmp,png|max:5024',
+            'asset_publikasi' => 'required|max:5024',
+            'asset_publikasi*' => 'required|max:5024',
+        ]);
+
         $publikasi = new Publikasi();
         $publikasi->user_id = auth()->user()->id;
         $publikasi->judul_publikasi = request('judul_publikasi');
@@ -55,6 +62,10 @@ class PublikasiController extends Controller
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'judul_publikasi' => 'required',
+        ]);
+
         $publikasi = Publikasi::find($id);
         $publikasi->judul_publikasi = request('judul_publikasi');
         $publikasi->save();

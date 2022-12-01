@@ -31,6 +31,13 @@ class InformasiController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'judul_informasi' => 'required',
+            'category_informasi' => 'required',
+            'gambar_informasi' => 'required|mimes:jpg,bmp,png|max:5024',
+            'isi_informasi' => 'required',
+        ]);
+
         $informasi = new Informasi();
         $informasi->user_id = auth()->user()->id;
         $informasi->judul_informasi = request('judul_informasi');
@@ -47,6 +54,13 @@ class InformasiController extends Controller
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'judul_informasi' => 'required',
+            'category_informasi' => 'required',
+            'gambar_informasi' => 'mimes:jpg,bmp,png',
+            'isi_informasi' => 'required',
+        ]);
+
         $informasi = Informasi::find($id);
         $informasi->user_id = auth()->user()->id;
         $informasi->judul_informasi = request('judul_informasi');

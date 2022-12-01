@@ -21,6 +21,20 @@ class HonorerController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'nama' => 'required',
+            'jabatan' => 'required',
+            'pegawai_email' => 'required',
+            'nip' => 'required',
+            'pin' => 'required',
+            'gol' => 'required',
+            'status' => 'required',
+            'opd' => 'required',
+            'kec' => 'required',
+            'tempat_lahir' => 'required',
+            'agama' => 'required',
+        ]);
+
         $data = new Honorer();
         $data->user_id = auth()->user()->id;
         $data->nama = Request('nama');

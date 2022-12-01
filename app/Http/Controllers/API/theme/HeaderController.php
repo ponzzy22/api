@@ -30,6 +30,22 @@ class HeaderController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'favicon' => 'required|mimes:jpg,bmp,png|max:5024',
+            'nama_website' => 'required',
+            'singkatan_website' => 'required',
+            'tag_line_website' => 'required',
+            'alamat' => 'required',
+            'phone' => 'required',
+            'deskripsi_singkat' => 'required',
+            'logo' => 'required|mimes:jpg,bmp,png',
+            'img_background_utama' => 'required|mimes:jpg,bmp,png|max:5024',
+            'img_background_1' => 'required|mimes:jpg,bmp,png|max:5024',
+            'img_background_2' => 'required|mimes:jpg,bmp,png|max:5024',
+            'img_background_3' => 'required|mimes:jpg,bmp,png|max:5024',
+            'text_utama' => 'required',
+        ]);
+
         $header = new Header();
         $header->user_id = auth()->user()->id;
         $header->nama_website = request('nama_website');
@@ -53,6 +69,22 @@ class HeaderController extends Controller
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'favicon' => 'mimes:jpg,bmp,png',
+            'nama_website' => 'required',
+            'singkatan_website' => 'required',
+            'tag_line_website' => 'required',
+            'alamat' => 'required',
+            'phone' => 'required',
+            'deskripsi_singkat' => 'required',
+            'logo' => 'mimes:jpg,bmp,png',
+            'img_background_utama' => 'mimes:jpg,bmp,png',
+            'img_background_1' => 'mimes:jpg,bmp,png',
+            'img_background_2' => 'mimes:jpg,bmp,png',
+            'img_background_3' => 'mimes:jpg,bmp,png',
+            'text_utama' => 'required',
+        ]);
+
         $header = Header::find($id);
         $header->nama_website = request('nama_website');
 

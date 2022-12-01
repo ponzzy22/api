@@ -30,6 +30,11 @@ class GambarController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'judul' => 'required',
+            'image' => 'required|mimes:jpg,bmp,png|max:5024'
+        ]);
+
         $data = new Gambar();
         $data->user_id = auth()->user()->id;
         $data->judul = request('judul');

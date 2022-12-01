@@ -30,6 +30,11 @@ class VideoController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'judul' => ['required'],
+            'image' => ['required', 'max:10000']
+        ]);
+
         $data = new Video();
         $data->judul = request('judul');
         $data->image = uploadfile('image', 'media/video');

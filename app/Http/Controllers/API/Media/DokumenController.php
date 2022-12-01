@@ -30,6 +30,12 @@ class DokumenController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'judul' => 'required',
+            'user' => 'required',
+            'image' => 'required'
+        ]);
+
         $prof = new Dokumen();
         $prof->user_id = auth()->user()->id;
         $prof->judul = request('judul');
