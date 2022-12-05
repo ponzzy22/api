@@ -9,26 +9,26 @@ use Illuminate\Http\Request;
 
 class HeaderController extends Controller
 {
-    public function index()
+    function index()
     {
-        $data = Header::where('user_id', auth()->user()->id)->get();
-        $result = HeaderResource::collection($data);
-        return $this->sendResponse($result, 'Successfull get data');
+        $d = Header::where('user_id', auth()->user()->id)->get();
+        $r = HeaderResource::collection($d);
+        return $this->sendResponse($r, 'Berhasil Ambil Data');
     }
 
 
-    public function show($id)
+    function show($id)
     {
-        $cek = Header::find($id);
-        if (!$cek) {
-            abort(404, 'Object not found');
+        $c = Header::find($id);
+        if (!$c) {
+            abort(404, 'Data Tidak ditemukan');
         }
-        $data = new HeaderResource($cek);
+        $d = new HeaderResource($c);
 
-        return $this->sendResponse($data, "Successfull get detail data");
+        return $this->sendResponse($d, "Berhasil Ambil Detail Data");
     }
 
-    public function store(Request $request)
+    function store(Request $request)
     {
         $request->validate([
             'favicon' => 'required|mimes:jpg,bmp,png|max:5024',
@@ -47,7 +47,7 @@ class HeaderController extends Controller
         ]);
 
         $header = new Header();
-        $header->user_id = auth()->user()->id;
+        $header->user_id = request('user_id');
         $header->nama_website = request('nama_website');
         $header->favicon = uploadfile('favicon', 'theme/header');
         $header->singkatan_website = request('singkatan_website');
@@ -61,13 +61,16 @@ class HeaderController extends Controller
         $header->img_background_2 = uploadfile('img_background_2', 'theme/header');
         $header->img_background_3 = uploadfile('img_background_3', 'theme/header');
         $header->text_utama = request('text_utama');
-        $header->save();
+        $c = $header->save();
 
-        return $this->sendResponse($header, "Successfull store");
+        if ($c) {
+            return response()->json(["message" => 'Data Berhasil Tersimpan']);
+        }
+        return response()->json(["danger" => 'Data Gagal Tersimpan!']);
     }
 
 
-    public function update(Request $request, $id)
+    function update(Request $request, $id)
     {
         $request->validate([
             'favicon' => 'mimes:jpg,bmp,png',
@@ -96,7 +99,7 @@ class HeaderController extends Controller
         }
 
 
-        $header->user_id = auth()->user()->id;
+        $header->user_id = request('user_id');
         $header->singkatan_website = request('singkatan_website');
         $header->tag_line_website = request('tag_line_website');
         $header->alamat = request('alamat');
@@ -128,17 +131,20 @@ class HeaderController extends Controller
             $header->save();
         }
         $header->text_utama = request('text_utama');
-        $header->update();
+        $c = $header->update();
 
-        return $this->sendResponse($header, "Successfull Update");
+        if ($c) {
+            return response()->json(["message" => 'Data Berhasil diUpdate']);
+        }
+        return response()->json(["danger" => 'Data Gagal diUpdate !']);
     }
 
-    public function destroy($id)
+    function destroy($id)
     {
-        $file = Header::findorfail($id);
-        $file->delete();
-        $data = $file->image;
-        deleteFIle($data);
-        return response()->noContent();
+        $a = Header::findorfail($id);
+        $a->delete();
+        $d = $a->image;
+        deleteFIle($d);
+        return response()->json(["message" => 'Data Berhasil diHapus']);
     }
 }

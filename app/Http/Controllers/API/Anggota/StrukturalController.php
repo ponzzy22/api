@@ -9,22 +9,22 @@ use Illuminate\Http\Request;
 
 class StrukturalController extends Controller
 {
-    public function index()
+    function index()
     {
-        $data = Struktural::latest()->get();
-        $result = StrukturalResource::collection($data);
-        return $this->sendResponse($result, 'Successfull get data');
+        $d = Struktural::latest()->get();
+        $r = StrukturalResource::collection($d);
+        return $this->sendResponse($r, 'Berhasil Ambil Data');
     }
 
 
-    public function show($id)
+    function show($id)
     {
-        $cek = Struktural::find($id);
-        if (!$cek) {
-            abort(404, 'Object not found');
+        $c = Struktural::find($id);
+        if (!$c) {
+            abort(404, 'Data Tidak ditemukan');
         }
-        $data = new StrukturalResource($cek);
+        $d = new StrukturalResource($c);
 
-        return $this->sendResponse($data, "Successfull get detail data");
+        return $this->sendResponse($d, "Berhasil Ambil Detail Data");
     }
 }

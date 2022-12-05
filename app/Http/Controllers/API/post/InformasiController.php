@@ -9,82 +9,91 @@ use Illuminate\Http\Request;
 
 class InformasiController extends Controller
 {
-    public function index()
+    function index()
     {
-        $data = Informasi::where('user_id', auth()->user()->id)->get();
-        $result = InformasiResource::collection($data);
-        return $this->sendResponse($result, 'Successfull get data');
+        $d = Informasi::where('user_id', auth()->user()->id)->get();
+        $r = InformasiResource::collection($d);
+        return $this->sendResponse($r, 'Berhasil Ambil Data');
     }
 
 
-    public function show($id)
+    function show($id)
     {
-        $cek = Informasi::find($id);
-        if (!$cek) {
-            abort(404, 'Object not found');
+        $c = Informasi::find($id);
+        if (!$c) {
+            abort(404, 'Data Tidak ditemukan');
         }
-        $data = new InformasiResource($cek);
+        $d = new InformasiResource($c);
 
-        return $this->sendResponse($data, "Successfull get detail data");
+        return $this->sendResponse($d, "Berhasil Ambil Detail Data");
     }
 
 
-    public function store(Request $request)
+    function store(Request $r)
     {
-        $request->validate([
+        $r->validate([
             'judul_informasi' => 'required',
             'category_informasi' => 'required',
             'gambar_informasi' => 'required|mimes:jpg,bmp,png|max:5024',
             'isi_informasi' => 'required',
         ]);
 
-        $informasi = new Informasi();
-        $informasi->user_id = auth()->user()->id;
-        $informasi->judul_informasi = request('judul_informasi');
-        $informasi->category_informasi = request('category_informasi');
-        $informasi->isi_informasi = request('isi_informasi');
+        $d = new Informasi();
+        $d->user_id = $r->user_id;
+        $d->judul_informasi = $r->judul_informasi;
+        $d->category_informasi = $r->category_informasi;
+        $d->isi_informasi = $r->isi_informasi;
         $req = 'gambar_informasi';
         $namefolder = 'post/informasi';
         $url = uploadfile($req, $namefolder);
-        $informasi->gambar_informasi = $url;
-        $informasi->save();
-        return $this->sendResponse($informasi, "Successfull store");
+        $d->gambar_informasi = $url;
+        $c = $d->save();
+
+        if ($c) {
+            return response()->json(["message" => 'Data Berhasil Tersimpan']);
+        }
+        return response()->json(["danger" => 'Data Gagal Tersimpan!']);
     }
 
 
-    public function update(Request $request, $id)
+    function update(Request $r, $id)
     {
-        $request->validate([
+        $r->validate([
             'judul_informasi' => 'required',
             'category_informasi' => 'required',
             'gambar_informasi' => 'mimes:jpg,bmp,png',
             'isi_informasi' => 'required',
         ]);
 
-        $informasi = Informasi::find($id);
-        $informasi->user_id = auth()->user()->id;
-        $informasi->judul_informasi = request('judul_informasi');
-        $informasi->category_informasi = request('category_informasi');
-        $informasi->isi_informasi = request('isi_informasi');
-        $informasi->save();
+        $d = Informasi::find($id);
+        $d->user_id = $r->user_id;
+        $d->judul_informasi = $r->judul_informasi;
+        $d->category_informasi = $r->category_informasi;
+        $d->isi_informasi = $r->isi_informasi;
+        $c = $d->save();
+
         $req = 'gambar_informasi';
         $namefolder = 'post/informasi';
-        $data = $informasi->gambar_informasi;
+        $data = $d->gambar_informasi;
         $url = updateFile($req, $namefolder, $data);
         if (request()->hasFile($req)) {
-            $informasi->gambar_informasi = $url;
-            $informasi->save();
+            $d->gambar_informasi = $url;
+            $c = $d->save();
         }
 
-        return $this->sendResponse($informasi, "Successfull Update");
+        if ($c) {
+            return response()->json(["message" => 'Data Berhasil diUpdate']);
+        }
+        return response()->json(["danger" => 'Data Gagal diUpdate !']);
     }
 
-    public function destroy($id)
+    function destroy($id)
     {
-        $file = Informasi::findorfail($id);
-        $file->delete();
-        $data = $file->image;
-        deleteFIle($data);
-        return response()->noContent();
+        $a = Informasi::findorfail($id);
+        $a->delete();
+        $d = $a->image;
+        deleteFIle($d);
+        return response()->json(["message" => 'Data Berhasil diHapus']);
     }
+
 }

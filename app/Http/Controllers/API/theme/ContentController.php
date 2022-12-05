@@ -9,30 +9,30 @@ use Illuminate\Http\Request;
 
 class ContentController extends Controller
 {
-    public function index()
+    function index()
     {
-        $data = Content::where('user_id', auth()->user()->id)->get();
-        $result = ContentResource::collection($data);
-        return $this->sendResponse($result, 'Successfull get data');
+        $d = Content::where('user_id', auth()->user()->id)->get();
+        $r = ContentResource::collection($d);
+        return $this->sendResponse($r, 'Berhasil Ambil Data');
     }
 
 
-    public function show($id)
+    function show($id)
     {
-        $cek = Content::find($id);
-        if (!$cek) {
-            abort(404, 'Object not found');
+        $c = Content::find($id);
+        if (!$c) {
+            abort(404, 'Data Tidak ditemukan');
         }
-        $data = new ContentResource($cek);
+        $d = new ContentResource($c);
 
-        return $this->sendResponse($data, "Successfull get detail data");
+        return $this->sendResponse($d, "Berhasil Ambil Detail Data");
     }
 
 
-    public function store(Request $request)
+    function store(Request $r)
     {
 
-        $request->validate([
+        $r->validate([
             'judul' => 'required',
             'tentang' => 'required',
             'visi' => 'required',
@@ -42,24 +42,27 @@ class ContentController extends Controller
             'layanan' => 'required',
         ]);
 
-        $content = new Content();
-        $content->judul = Request('judul');
-        $content->tentang = Request('tentang');
-        $content->visi = Request('visi');
-        $content->misi = Request('misi');
-        $content->maklumat = Request('maklumat');
-        $content->selayang = uploadfile('selayang', 'theme/content');
-        $content->layanan = Request('layanan');
-        $content->user_id = auth()->user()->id;
-        $content->save();
+        $d = new Content();
+        $d->judul = $r->judul;
+        $d->tentang = $r->tentang;
+        $d->visi = $r->visi;
+        $d->misi = $r->misi;
+        $d->maklumat = $r->maklumat;
+        $d->layanan = $r->layanan;
+        $d->user_id = $r->user_id;
+        $d->selayang = uploadfile('selayang', 'theme/content');
+        $c = $d->save();
 
-        return $this->sendResponse($content, "Successfull store");
+        if ($c) {
+            return response()->json(["message" => 'Data Berhasil Tersimpan']);
+        }
+        return response()->json(["danger" => 'Data Gagal Tersimpan!']);
     }
 
-    public function update(Request $request, $id)
-    {
 
-        $request->validate([
+    function update(Request $r, $id)
+    {
+        $r->validate([
             'judul' => 'required',
             'tentang' => 'required',
             'visi' => 'required',
@@ -69,29 +72,34 @@ class ContentController extends Controller
             'layanan' => 'required',
         ]);
 
-        $content = Content::find($id);
-        $content->judul = Request('judul');
-        $content->tentang = Request('tentang');
-        $content->visi = Request('visi');
-        $content->misi = Request('misi');
-        $content->maklumat = Request('maklumat');
-        $content->layanan = Request('layanan');
-        $content->save();
+        $d = Content::find($id);
+        $d->judul = $r->judul;
+        $d->tentang = $r->tentang;
+        $d->visi = $r->visi;
+        $d->misi = $r->misi;
+        $d->maklumat = $r->maklumat;
+        $d->layanan = $r->layanan;
+        $d->user_id = $r->user_id;
+        $c = $d->save();
+
         if (request()->hasFile('selayang')) {
-            $url = updateFile('selayang', 'theme/content', $content->selayang);
-            $content->selayang = $url;
-            $content->save();
+            $url = updateFile('selayang', 'theme/content', $d->selayang);
+            $d->selayang = $url;
+            $c = $d->save();
         }
 
-        return $this->sendResponse($content, "Successfull Update");
+        if ($c) {
+            return response()->json(["message" => 'Data Berhasil diUpdate']);
+        }
+        return response()->json(["danger" => 'Data Gagal diUpdate !']);
     }
 
-    public function destroy($id)
+    function destroy($id)
     {
-        $file = Content::findorfail($id);
-        $file->delete();
-        $data = $file->image;
-        deleteFIle($data);
-        return response()->noContent();
+        $a = Content::findorfail($id);
+        $a->delete();
+        $d = $a->image;
+        deleteFIle($d);
+        return response()->json(["message" => 'Data Berhasil diHapus']);
     }
 }

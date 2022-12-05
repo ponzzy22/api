@@ -9,22 +9,22 @@ use Illuminate\Http\Request;
 
 class PptkController extends Controller
 {
-    public function index()
+    function index()
     {
-        $data = Pptk::latest()->get();
-        $result = PptkResource::collection($data);
-        return $this->sendResponse($result, 'Successfull get data');
+        $d = Pptk::latest()->get();
+        $r = PptkResource::collection($d);
+        return $this->sendResponse($r, 'Berhasil Ambil Data');
     }
 
 
-    public function show($id)
+    function show($id)
     {
-        $cek = Pptk::find($id);
-        if (!$cek) {
-            abort(404, 'Object not found');
+        $c = Pptk::find($id);
+        if (!$c) {
+            abort(404, 'Data Tidak ditemukan');
         }
-        $data = new PptkResource($cek);
+        $d = new PptkResource($c);
 
-        return $this->sendResponse($data, "Successfull get detail data");
+        return $this->sendResponse($d, "Berhasil Ambil Detail Data");
     }
 }

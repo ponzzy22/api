@@ -9,29 +9,29 @@ use Illuminate\Http\Request;
 
 class FooterController extends Controller
 {
-    public function index()
+    function index()
     {
-        $data = footer::where('user_id', auth()->user()->id)->get();
-        $result = FooterResource::collection($data);
-        return $this->sendResponse($result, 'Successfull get data');
+        $d = footer::where('user_id', auth()->user()->id)->get();
+        $r = FooterResource::collection($d);
+        return $this->sendResponse($r, 'Berhasil Ambil Data');
     }
 
 
-    public function show($id)
+    function show($id)
     {
-        $cek = footer::find($id);
-        if (!$cek) {
-            abort(404, 'Object not found');
+        $c = footer::find($id);
+        if (!$c) {
+            abort(404, 'Data Tidak ditemukan');
         }
-        $data = new FooterResource($cek);
+        $d = new FooterResource($c);
 
-        return $this->sendResponse($data, "Successfull get detail data");
+        return $this->sendResponse($d, "Berhasil Ambil Detail Data");
     }
 
 
-    public function store(Request $request)
+    function store(Request $r)
     {
-        $request->validate([
+        $r->validate([
             'nama' => 'required',
             'alamat' => 'required',
             'telepon' => 'required',
@@ -39,44 +39,53 @@ class FooterController extends Controller
             'posisi' => 'required',
         ]);
 
-        $footer = new footer();
-        $footer->user_id = auth()->user()->id;
-        $footer->nama = Request('nama');
-        $footer->alamat = Request('alamat');
-        $footer->telepon = Request('telepon');
-        $footer->email = Request('email');
-        $footer->posisi = Request('posisi');
-        $footer->save();
-        return $this->sendResponse($footer, "Successfull store");
+        $d = new footer();
+        $d->user_id = $r->user_id;
+        $d->nama = $r->nama;
+        $d->alamat = $r->alamat;
+        $d->telepon = $r->telepon;
+        $d->email = $r->email;
+        $d->posisi = $r->posisi;
+        $c = $d->save();
+
+        if ($c) {
+            return response()->json(["message" => 'Data Berhasil Tersimpan']);
+        }
+        return response()->json(["danger" => 'Data Gagal Tersimpan!']);
     }
 
-    public function update(Request $request, $id)
+
+    function update(Request $r, $id)
     {
-        $request->validate([
+        $r->validate([
             'nama' => 'required',
             'alamat' => 'required',
             'telepon' => 'required',
             'email' => 'required',
         ]);
 
-        $footer = footer::find($id);
-        $footer->user_id = auth()->user()->id;
-        $footer->nama = Request('nama');
-        $footer->alamat = Request('alamat');
-        $footer->telepon = Request('telepon');
-        $footer->email = Request('email');
-        if (request('posisi')) $footer->posisi = Request('posisi');
-        $footer->save();
+        $d = footer::find($id);
+        $d->user_id = $r->user_id;
+        $d->nama = $r->nama;
+        $d->alamat = $r->alamat;
+        $d->telepon = $r->telepon;
+        $d->email = $r->email;
+        if (request('posisi')) $d->posisi = $r->posisi;
+        $c = $d->save();
 
-        return $this->sendResponse($footer, "Successfull Update");
+        if ($c) {
+            return response()->json(["message" => 'Data Berhasil diUpdate']);
+        }
+        return response()->json(["danger" => 'Data Gagal diUpdate !']);
     }
 
-    public function destroy($id)
+
+    function destroy($id)
     {
-        $file = footer::findorfail($id);
-        $file->delete();
-        $data = $file->image;
-        deleteFIle($data);
-        return response()->noContent();
+        $a = footer::findorfail($id);
+        $a->delete();
+        $d = $a->image;
+        deleteFIle($d);
+        return response()->json(["message" => 'Data Berhasil diHapus']);
     }
 }

@@ -10,23 +10,23 @@ use Illuminate\Http\Request;
 
 class AsnController extends Controller
 {
-    public function index()
+    function index()
     {
-        $data = User::all();
-        $result = AsnResource::collection($data);
-        return $this->sendResponse($result, 'Successfull get data');
+        $d = User::all();
+        $r = AsnResource::collection($d);
+        return $this->sendResponse($r, 'Berhasil Ambil Data');
     }
 
 
-    public function show($id)
+    function show($id)
     {
-        $cek = User::find($id);
-        if (!$cek) {
-            abort(404, 'Object not found');
+        $c = User::find($id);
+        if (!$c) {
+            abort(404, 'Data Tidak ditemukan');
         }
-        $data = new AsnResource($cek);
+        $d = new AsnResource($c);
 
-        return $this->sendResponse($data, "Successfull get detail data");
+        return $this->sendResponse($d, "Berhasil Ambil Detail Data");
     }
 
 }

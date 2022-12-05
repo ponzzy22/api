@@ -2,75 +2,87 @@
 
 namespace App\Http\Controllers\API\media;
 
+use App\Helpers\ApiFormatter;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\media\DokumenResource;
 use App\Models\Media\Dokumen;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DokumenController extends Controller
 {
-    public function index()
+    function index()
     {
-        $data = Dokumen::where('user_id', auth()->user()->id)->get();
-        $result = DokumenResource::collection($data);
-        return $this->sendResponse($result, 'Successfull get data');
+        $d = Dokumen::where('user_id', auth()->user()->id)->get();
+        $r = DokumenResource::collection($d);
+        return $this->sendResponse($r, 'Berhasil Ambil Data');
     }
 
 
-    public function show($id)
+    function show($id)
     {
-        $cek = Dokumen::find($id);
-        if (!$cek) {
-            abort(404, 'Object not found');
+        $c = Dokumen::find($id);
+        if (!$c) {
+            abort(404, 'Data Tidak ditemukan');
         }
-        $data = new DokumenResource($cek);
+        $d = new DokumenResource($c);
 
-        return $this->sendResponse($data, "Successfull get detail data");
+        return $this->sendResponse($d, "Berhasil Ambil Detail Data");
     }
 
-    public function store(Request $request)
+
+    function store(Request $r)
     {
-        $request->validate([
-            'judul' => 'required',
-            'user' => 'required',
-            'image' => 'required'
+        $r->validate([
+            'judul' => ['required', 'unique:website_gambar,judul'],
+            'image' => ['required', 'max:10000']
         ]);
 
-        $prof = new Dokumen();
-        $prof->user_id = auth()->user()->id;
-        $prof->judul = request('judul');
-        $prof->user = request('user');
-        $prof->image = uploadfile('image', 'media/dokumen');
-        $prof->save();
+        $g = new Dokumen;
+        $g->user_id = $r->user_id;
+        $g->judul = $r->judul;
+        $g->user = $r->user;
+        $g->image = uploadfile('image', 'media/dokumen');
+        $c = $g->save();
 
-        return $this->sendResponse($prof, "Successfull store");
+        if ($c) {
+            return response()->json(["message" => 'Data Berhasil Tersimpan']);
+        }
+        return response()->json(["danger" => 'Data Gagal Tersimpan!']);
     }
 
-    public function update(Request $request, $id)
+
+    function update(Request $r, $id)
     {
-        $dokumen = Dokumen::find($id);
-        $dokumen->user_id = auth()->user()->id;
-        $dokumen->judul = request('judul');
-        $dokumen->user = request('user');
-        $dokumen->save();
+        $g = Dokumen::find($id);
+        $g->user_id = $r->user_id;
+        $g->judul = $r->judul;
+        $g->user = $r->user;
+        $c = $g->save();
+
         $req = "image";
         $namefolder = 'media/dokumen';
-        $data = $dokumen->image;
+        $data = $g->image;
         $url = updateFile($req, $namefolder, $data);
         if (request()->hasFile($req)) {
-            $dokumen->image = $url;
-            $dokumen->save();
+            $g->image = $url;
+            $c = $g->save();
         }
 
-        return $this->sendResponse($dokumen, "Successfull Update");
+        if ($c) {
+            return response()->json(["message" => 'Data Berhasil diUpdate']);
+        }
+        return response()->json(["danger" => 'Data Gagal diUpdate !']);
     }
 
-    public function destroy($id)
+
+    function destroy($id)
     {
-        $dokumen = Dokumen::findorfail($id);
-        $dokumen->delete();
-        $data = $dokumen->image;
-        deleteFIle($data);
-        return response()->noContent();
+        $g = Dokumen::findorfail($id);
+        $g->delete();
+        $d = $g->image;
+        deleteFIle($d);
+        return response()->json(["message" => 'Data Berhasil diHapus']);
     }
 }

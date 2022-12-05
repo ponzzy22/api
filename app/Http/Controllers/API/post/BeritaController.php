@@ -9,79 +9,86 @@ use Illuminate\Http\Request;
 
 class BeritaController extends Controller
 {
-    public function index()
+    function index()
     {
-        $data = Berita::where('user_id', auth()->user()->id)->get();
-        $result = BeritaResource::collection($data);
-        return $this->sendResponse($result, 'Successfull get data');
+        $d = Berita::where('user_id', auth()->user()->id)->get();
+        $r = BeritaResource::collection($d);
+        return $this->sendResponse($r, 'Berhasil Ambil Data');
     }
 
 
-    public function show($id)
+    function show($id)
     {
-        $cek = Berita::find($id);
-        if (!$cek) {
-            abort(404, 'Object not found');
+        $c = Berita::find($id);
+        if (!$c) {
+            abort(404, 'Data Tidak ditemukan');
         }
-        $data = new BeritaResource($cek);
+        $d = new BeritaResource($c);
 
-        return $this->sendResponse($data, "Successfull get detail data");
+        return $this->sendResponse($d, "Berhasil Ambil Detail Data");
     }
 
 
-    public function store(Request $request)
+    function store(Request $r)
     {
-        $request->validate([
+        $r->validate([
             'judul' => 'required',
             'poto' => 'required|mimes:jpg,bmp,png|max:5024',
             'isi' => 'required',
         ]);
 
-        $berita = new Berita();
-        $berita->user_id = auth()->user()->id;
-        $berita->judul = request('judul');
-        $berita->isi = request('isi');
+        $d = new Berita();
+        $d->user_id = $r->user_id;
+        $d->judul = $r->judul;
+        $d->isi = $r->isi;
         $req = "poto";
         $namefolder = 'post/berita';
         $url = uploadfile($req, $namefolder);
-        $berita->poto = $url;
-        $berita->save();
+        $d->poto = $url;
+        $c = $d->save();
 
-        return $this->sendResponse($berita, "Successfull store");
+        if ($c) {
+            return response()->json(["message" => 'Data Berhasil Tersimpan']);
+        }
+        return response()->json(["danger" => 'Data Gagal Tersimpan!']);
     }
 
 
-    public function update(Request $request, $id)
+    function update(Request $r, $id)
     {
-        $request->validate([
+        $r->validate([
             'judul' => 'required',
             'poto' => 'mimes:jpg,bmp,png',
             'isi' => 'required',
         ]);
 
-        $berita = Berita::find($id);
-        $berita->judul = request('judul');
-        $berita->user_id = auth()->user()->id;
-        $berita->isi = request('isi');
-        $berita->save();
+        $d = Berita::find($id);
+        $d->user_id = $r->user_id;
+        $d->judul = $r->judul;
+        $d->isi = $r->isi;
+        $c = $d->save();
+
         $req = "poto";
         $namefolder = 'post/berita';
-        $data = $berita->poto;
+        $data = $d->poto;
         $url = updateFile($req, $namefolder, $data);
         if (request()->hasFile($req)) {
-            $berita->poto = $url;
-            $berita->save();
+            $d->poto = $url;
+            $c = $d->save();
         }
 
-        return $this->sendResponse($berita, "Successfull Update");
+        if ($c) {
+            return response()->json(["message" => 'Data Berhasil diUpdate']);
+        }
+        return response()->json(["danger" => 'Data Gagal diUpdate !']);
     }
 
-    public function destroy($id)
+    function destroy($id)
     {
-        $berita = Berita::findorfail($id);
-        $berita->delete();
-        $data = $berita->image;
-        deleteFIle($data);
-        return response()->noContent();
+        $b = Berita::findorfail($id);
+        $b->delete();
+        $d = $b->image;
+        deleteFIle($d);
+        return response()->json(["message" => 'Data Berhasil diHapus']);
     }
 }

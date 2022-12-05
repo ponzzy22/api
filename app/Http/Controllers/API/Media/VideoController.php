@@ -9,66 +9,75 @@ use Illuminate\Http\Request;
 
 class VideoController extends Controller
 {
-    public function index()
+    function index()
     {
-        $data = Video::where('user_id', auth()->user()->id)->get();
-        $result = VideoResource::collection($data);
-        return $this->sendResponse($result, 'Successfull get data');
+        $d = Video::where('user_id', auth()->user()->id)->get();
+        $r = VideoResource::collection($d);
+        return $this->sendResponse($r, 'Berhasil Ambil Data');
     }
 
 
-    public function show($id)
+    function show($id)
     {
-        $cek = Video::find($id);
-        if (!$cek) {
-            abort(404, 'Object not found');
+        $c = Video::find($id);
+        if (!$c) {
+            abort(404, 'Data Tidak ditemukan');
         }
-        $data = new VideoResource($cek);
+        $d = new VideoResource($c);
 
-        return $this->sendResponse($data, "Successfull get detail data");
+        return $this->sendResponse($d, "Berhasil Ambil Detail Data");
     }
 
-    public function store(Request $request)
+
+    function store(Request $r)
     {
-        $request->validate([
-            'judul' => ['required'],
+        $r->validate([
+            'judul' => ['required', 'unique:website_gambar,judul'],
             'image' => ['required', 'max:10000']
         ]);
 
-        $data = new Video();
-        $data->judul = request('judul');
-        $data->image = uploadfile('image', 'media/video');
-        $data->user_id = auth()->user()->id;
-        $data->save();
+        $g = new Video;
+        $g->user_id = $r->user_id;
+        $g->judul = $r->judul;
+        $g->image = uploadfile('image', 'media/video');
+        $c = $g->save();
 
-        return $this->sendResponse($data, "Successfull store");
+        if ($c) {
+            return response()->json(["message" => 'Data Berhasil Tersimpan']);
+        }
+        return response()->json(["danger" => 'Data Gagal Tersimpan!']);
     }
 
-    public function update(Request $request, $id)
+
+    function update(Request $r, $id)
     {
-        $video = Video::find($id);
-        $video->user_id = auth()->user()->id;
-        $video->judul = request('judul');
-        // $video->user = request('user');
-        $video->save();
+        $g = Video::find($id);
+        $g->user_id = $r->user_id;
+        $g->judul = $r->judul;
+        $c = $g->save();
+
         $req = "image";
         $namefolder = 'media/video';
-        $data = $video->image;
+        $data = $g->image;
         $url = updateFile($req, $namefolder, $data);
         if (request()->hasFile($req)) {
-            $video->image = $url;
-            $video->save();
+            $g->image = $url;
+            $c = $g->save();
         }
 
-        return $this->sendResponse($video, "Successfull Update");
+        if ($c) {
+            return response()->json(["message" => 'Data Berhasil diUpdate']);
+        }
+        return response()->json(["danger" => 'Data Gagal diUpdate !']);
     }
 
-    public function destroy($id)
+
+    function destroy($id)
     {
-        $video = Video::findorfail($id);
-        $video->delete();
-        $data = $video->image;
-        deleteFIle($data);
-        return response()->noContent();
+        $g = Video::findorfail($id);
+        $g->delete();
+        $d = $g->image;
+        deleteFIle($d);
+        return response()->json(["message" => 'Data Berhasil diHapus']);
     }
 }

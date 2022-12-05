@@ -9,66 +9,75 @@ use Illuminate\Http\Request;
 
 class GambarController extends Controller
 {
-    public function index()
+    function index()
     {
-        $data = Gambar::where('user_id', auth()->user()->id)->get();
-        $result = GambarResource::collection($data);
-        return $this->sendResponse($result, 'Successfull get data');
+        $d = Gambar::where('user_id', auth()->user()->id)->get();
+        $r = GambarResource::collection($d);
+        return $this->sendResponse($r, 'Berhasil Ambil Data');
     }
 
 
-    public function show($id)
+    function show($id)
     {
-        $cek = Gambar::find($id);
-        if (!$cek) {
-            abort(404, 'Object not found');
+        $c = Gambar::find($id);
+        if (!$c) {
+            abort(404, 'Data Tidak ditemukan');
         }
-        $data = new GambarResource($cek);
+        $d = new GambarResource($c);
 
-        return $this->sendResponse($data, "Successfull get detail data");
+        return $this->sendResponse($d, "Berhasil Ambil Detail Data");
     }
 
-    public function store(Request $request)
+
+    function store(Request $r)
     {
-        $request->validate([
-            'judul' => 'required',
-            'image' => 'required|mimes:jpg,bmp,png|max:5024'
+        $r->validate([
+            'judul' => ['required', 'unique:website_gambar,judul'],
+            'image' => ['required', 'max:10000']
         ]);
 
-        $data = new Gambar();
-        $data->user_id = auth()->user()->id;
-        $data->judul = request('judul');
-        $data->image = uploadfile('image', 'media/gambar');
-        $data->save();
+        $g = new Gambar;
+        $g->user_id = $r->user_id;
+        $g->judul = $r->judul;
+        $g->image = uploadfile('image', 'media/gambar');
+        $c = $g->save();
 
-        return $this->sendResponse($data, "Successfull store");
+        if ($c) {
+            return response()->json(["message" => 'Data Berhasil Tersimpan']);
+        }
+        return response()->json(["danger" => 'Data Gagal Tersimpan!']);
     }
 
-    public function update(Request $request, $id)
+
+    function update(Request $r, $id)
     {
-        $gambar = Gambar::find($id);
-        $gambar->user_id = auth()->user()->id;
-        $gambar->judul = request('judul');
-        // $gambar->user = request('user');
-        $gambar->save();
+        $g = Gambar::find($id);
+        $g->user_id = $r->user_id;
+        $g->judul = $r->judul;
+        $c = $g->save();
+
         $req = "image";
-        $namefolder = 'media/gambar';
-        $data = $gambar->image;
+        $namefolder = 'media/video';
+        $data = $g->image;
         $url = updateFile($req, $namefolder, $data);
         if (request()->hasFile($req)) {
-            $gambar->image = $url;
-            $gambar->save();
+            $g->image = $url;
+            $c = $g->save();
         }
 
-        return $this->sendResponse($gambar, "Successfull Update");
+        if ($c) {
+            return response()->json(["message" => 'Data Berhasil diUpdate']);
+        }
+        return response()->json(["danger" => 'Data Gagal diUpdate !']);
     }
 
-    public function destroy($id)
+
+    function destroy($id)
     {
-        $gambar = Gambar::findorfail($id);
-        $gambar->delete();
-        $data = $gambar->image;
-        deleteFIle($data);
-        return response()->noContent();
+        $g = Gambar::findorfail($id);
+        $g->delete();
+        $d = $g->image;
+        deleteFIle($d);
+        return response()->json(["message" => 'Data Berhasil diHapus']);
     }
 }
